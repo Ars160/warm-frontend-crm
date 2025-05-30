@@ -397,10 +397,11 @@ export class ShopComponent {
         { label: 'Отчеты', link: '/shop/dashboard', icon: '📈' }
       ],
       picker: [
-
+        { label: 'Заказы', link: '/shop/picker', icon: '🛍️' }
       ],
       user: [
-
+        { label: 'Продукты', link: '/shop/user', icon: '🛍️' },
+        { label: 'Мой Заказы', link: '/shop/my-orders', icon: '🗂️' }
       ]
     };
 

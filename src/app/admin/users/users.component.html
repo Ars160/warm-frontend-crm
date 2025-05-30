@@ -1,0 +1,17 @@
+<h2>Пользователи</h2>
+
+<div *ngFor="let user of users" style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px;">
+  <b>ID:</b> {{ user._id }} <br>
+  <b>UserName:</b> {{ user.username }} <br>
+  <b>Роль:</b> {{ user.role }} <br>
+
+  <label>Изменить роль:</label>
+  <select [(ngModel)]="user.role">
+    <option value="admin">admin</option>
+    <option value="manager">manager</option>
+    <option value="cashier">cashier</option>
+    <option value="picker">picker</option>
+    <option value="user">user</option>
+  </select>
+  <button (click)="updateRole(user._id, user.role)">Сохранить</button>
+</div>

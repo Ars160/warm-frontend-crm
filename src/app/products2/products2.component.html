@@ -1,0 +1,11 @@
+<h2>Список продуктов</h2>
+<div *ngFor="let product of products" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
+  <b>{{ product.name }}</b><br>
+  <span>Цена: {{ product.price }} ₸</span><br>
+  <input type="number" min="1" [(ngModel)]="product.quantity" placeholder="Количество">
+  <button (click)="addToCart(product._id, product.quantity || 1)">Добавить в корзину</button>
+</div>
+
+<hr>
+
+<button (click)="placeOrder()">Оформить заказ</button>

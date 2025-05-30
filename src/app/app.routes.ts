@@ -17,11 +17,26 @@ export const routes: Routes = [
       { path: 'categories', loadComponent: () => import('./admin/categories/categories.component').then(m => m.CategoriesComponent) },
       { path: 'products', loadComponent: () => import('./admin/products/products.component').then(m => m.ProductsComponent) },
       { path: 'drop', loadComponent: () => import('./admin/admin-drop/admin-drop.component').then(m => m.AdminDropComponent) },
+      { path: 'users', loadComponent: () => import('./admin/users/users.component').then(m => m.UsersComponent) },
 
       {
         path: 'cashier',
         loadComponent: () => import('./cashier/cash-register.component').then(m => m.CashRegisterComponent),
-        canActivate: [AuthGuard]
+      },
+
+      {
+        path: 'picker',
+        loadComponent: () => import('./picker/picker.component').then(m => m.PickerComponent),
+      },
+
+      {
+        path: 'user',
+        loadComponent: () => import('./products2/products2.component').then(m => m.Products2Component),
+      },
+
+      {
+        path: 'my-orders',
+        loadComponent: () => import('./my-orders/my-orders.component').then(m => m.MyOrdersComponent),
       }
       
     ]

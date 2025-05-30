@@ -1,0 +1,35 @@
+<h2>Новые заказы (pending)</h2>
+<div *ngFor="let order of pendingOrders" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
+  <b>Клиент:</b> {{ order.customerName }} <br>
+  <b>Состав заказа:</b>
+  <ul>
+    <li *ngFor="let item of order.items">
+      {{ item.product.name }} – {{ item.quantity }} шт
+    </li>
+  </ul>
+  <button (click)="acceptOrder(order._id)">Принять</button>
+  <button (click)="completeOrder(order._id)">Завершить</button>
+</div>
+
+<h2>В работе (in_progress)</h2>
+<div *ngFor="let order of inProgressOrders" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
+  <b>Клиент:</b> {{ order.customerName }} <br>
+  <b>Состав заказа:</b>
+  <ul>
+    <li *ngFor="let item of order.items">
+      {{ item.product.name }} – {{ item.quantity }} шт
+    </li>
+  </ul>
+  <button (click)="completeOrder(order._id)">Завершить</button>
+</div>
+
+<h2>Готовые заказы (ready)</h2>
+<div *ngFor="let order of readyOrders" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
+  <b>Клиент:</b> {{ order.customerName }} <br>
+  <b>Состав заказа:</b>
+  <ul>
+    <li *ngFor="let item of order.items">
+      {{ item.product.name }} – {{ item.quantity }} шт
+    </li>
+  </ul>
+</div>
