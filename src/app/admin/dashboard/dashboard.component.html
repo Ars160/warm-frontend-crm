@@ -1,2 +1,18 @@
-<h1>Добро пожаловать в админ-панель!</h1>
-<p>Это главная страница: можешь кастомизировать контент по своему усмотрению.</p>
+<h2>Суточный отчёт</h2>
+<div *ngFor="let daily of dailySummary">
+<p>Всего продаж: {{ daily.totalSales }}</p>
+<p>Общая сумма: {{ daily.count }}</p>
+</div>
+<h2>История продаж</h2>
+<table>
+  <tr>
+    <th>Дата</th>
+    <th>Покупатель</th>
+    <th>Сумма</th>
+  </tr>
+  <tr *ngFor="let sale of salesHistory">
+    <td>{{ sale.date | date }}</td>
+    <td>{{ sale._id }}</td>
+    <td>{{ sale.total }}</td>
+  </tr>
+</table>

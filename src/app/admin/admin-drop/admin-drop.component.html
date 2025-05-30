@@ -1,0 +1,44 @@
+<div class="admin-drop">
+    <h2>Все приходы</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Поставщик</th>
+          <th>Дата</th>
+          <th>Принял</th>
+          <th>Товары</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let drop of drops">
+          <td>{{ drop.supplier }}</td>
+          <td>{{ drop.date | date }}</td>
+          <td>{{ drop.acceptedBy }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let item of drop.items">
+                {{ item.productId }}: {{ item.quantity }}
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  
+    <h2>Добавить приход</h2>
+    <input [(ngModel)]="newDrop.supplier" placeholder="Поставщик" />
+    <!-- Добавление товаров -->
+    <div>
+      <input #productIdInput placeholder="ID товара" />
+      <input #quantityInput type="number" placeholder="Количество" />
+      <button (click)="addItem(productIdInput.value, +quantityInput.value)">Добавить товар</button>
+    </div>
+    <ul>
+      <li *ngFor="let item of newDrop.items">
+        {{ item.productId }}: {{ item.quantity }}
+      </li>
+    </ul>
+  
+    <button (click)="createDrop()">Создать приход</button>
+  </div>
+  
