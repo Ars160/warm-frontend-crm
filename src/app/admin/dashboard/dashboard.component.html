@@ -12,7 +12,7 @@
   </tr>
   <tr *ngFor="let sale of salesHistory">
     <td>{{ sale.date | date }}</td>
-    <td>{{ sale._id }}</td>
+    <td>{{ sale.paymentMethod }}</td>
     <td>{{ sale.total }}</td>
   </tr>
 </table>

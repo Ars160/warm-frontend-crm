@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { enviroment } from '../../../enviroment';
 
 interface DropItem {
   productId: string;
@@ -35,7 +36,7 @@ export class AdminDropComponent implements OnInit {
   }
 
   fetchDrops() {
-    this.http.get<Drop[]>('http://localhost:4000/api/orders').subscribe({
+    this.http.get<Drop[]>(`${enviroment.apiUrl}/api/orders`).subscribe({
       next: (data) => this.drops = data,
       error: (err) => console.error('Ошибка загрузки приходов:', err)
     });
@@ -47,7 +48,7 @@ export class AdminDropComponent implements OnInit {
       return;
     }
 
-    this.http.post('http://localhost:4000/api/orders', this.newDrop).subscribe({
+    this.http.post(`${enviroment.apiUrl}/api/orders`, this.newDrop).subscribe({
       next: () => {
         this.fetchDrops();
         this.newDrop = { supplier: '', items: [] };

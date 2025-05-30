@@ -25,6 +25,7 @@ export class DashboardComponent implements OnInit {
     this.salesService.getSales().subscribe({
       next: (data) => {
         this.salesHistory = data;
+        console.log(this.salesHistory);
         
       },
       error: (err) => {
@@ -36,8 +37,6 @@ export class DashboardComponent implements OnInit {
     this.salesService.getDailySummary().subscribe({
       next: (data) => {
         this.dailySummary = data;
-        console.log(this.dailySummary);
-        
       },
       error: (err) => {
         console.error('Ошибка при получении дневного отчёта', err);

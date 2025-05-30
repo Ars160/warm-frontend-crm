@@ -42,13 +42,15 @@ export class LoginComponent {
 
   navigateByRole(role: string) {
     if (role === 'admin') {
-      this.router.navigate(['/admin/dashboard']);
-    } else if (role === 'store_manager') {
-      this.router.navigate(['/store']);
+      this.router.navigate(['/shop']);
+    } else if (role === 'manager') {
+      this.router.navigate(['/shop']);
     } else if (role === 'cashier') {
       this.router.navigate(['/shop']);
     } else if (role === 'picker') {
-      this.router.navigate(['/picker']);
+      this.router.navigate(['/shop']);
+    } else if (role === 'user') {
+      this.router.navigate(['/shop']); 
     } else {
       this.router.navigate(['/']);
     }

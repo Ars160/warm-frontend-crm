@@ -1,0 +1,17 @@
+<h2>Список товаров</h2>
+<div *ngFor="let product of products" style="margin-bottom: 10px;">
+  <b>{{ product.name }}</b> – {{ product.price }} ₸
+  <input type="number" min="1" placeholder="Кол-во" #qtyInput>
+  <button (click)="addToCart(product, qtyInput)">Добавить</button>
+</div>
+
+<hr>
+
+<h3>Корзина:</h3>
+<ul>
+  <li *ngFor="let item of cart">
+    {{ item.name }} – {{ item.quantity }} шт
+  </li>
+</ul>
+
+<button (click)="makeSale()" [disabled]="cart.length === 0">Оформить продажу</button>

@@ -9,20 +9,21 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   {
-    path: 'admin',
-    loadComponent: () => import('./admin/admin.component').then(m => m.AdminComponent),
-    canActivate: [AdminGuard],
+    path: 'shop',
+    loadComponent: () => import('./shop/shop.component').then(m => m.ShopComponent),
+    canActivate: [AuthGuard],
     children: [
       { path: 'dashboard', loadComponent: () => import('./admin/dashboard/dashboard.component').then(m => m.DashboardComponent) },
       { path: 'categories', loadComponent: () => import('./admin/categories/categories.component').then(m => m.CategoriesComponent) },
       { path: 'products', loadComponent: () => import('./admin/products/products.component').then(m => m.ProductsComponent) },
       { path: 'drop', loadComponent: () => import('./admin/admin-drop/admin-drop.component').then(m => m.AdminDropComponent) },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
+
+      {
+        path: 'cashier',
+        loadComponent: () => import('./cashier/cash-register.component').then(m => m.CashRegisterComponent),
+        canActivate: [AuthGuard]
+      }
+      
     ]
-  },
-  {
-    path: 'shop',
-    loadComponent: () => import('./shop/shop.component').then(m => m.ShopComponent),
-    canActivate: [AuthGuard]
   }
 ];

@@ -1,0 +1,16 @@
+@media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      z-index: 100;
+      height: 100vh;
+      transform: translateX(calc(-1 * (var(--sidebar-expanded-width) - var(--sidebar-width))));
+    }
+    
+    .sidebar.expanded {
+      transform: translateX(0);
+    }
+    
+    .content-wrapper {
+      margin-left: var(--sidebar-width);
+    }
+  }
