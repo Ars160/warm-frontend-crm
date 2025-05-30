@@ -1,35 +1,91 @@
-<h2>Новые заказы (pending)</h2>
-<div *ngFor="let order of pendingOrders" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
-  <b>Клиент:</b> {{ order.customerName }} <br>
-  <b>Состав заказа:</b>
-  <ul>
-    <li *ngFor="let item of order.items">
-      {{ item.product.name }} – {{ item.quantity }} шт
-    </li>
-  </ul>
-  <button (click)="acceptOrder(order._id)">Принять</button>
-  <button (click)="completeOrder(order._id)">Завершить</button>
-</div>
-
-<h2>В работе (in_progress)</h2>
-<div *ngFor="let order of inProgressOrders" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
-  <b>Клиент:</b> {{ order.customerName }} <br>
-  <b>Состав заказа:</b>
-  <ul>
-    <li *ngFor="let item of order.items">
-      {{ item.product.name }} – {{ item.quantity }} шт
-    </li>
-  </ul>
-  <button (click)="completeOrder(order._id)">Завершить</button>
-</div>
-
-<h2>Готовые заказы (ready)</h2>
-<div *ngFor="let order of readyOrders" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
-  <b>Клиент:</b> {{ order.customerName }} <br>
-  <b>Состав заказа:</b>
-  <ul>
-    <li *ngFor="let item of order.items">
-      {{ item.product.name }} – {{ item.quantity }} шт
-    </li>
-  </ul>
-</div>
+<div class="picker-container">
+    <div class="header">
+      <h1>📦 Панель сборщика заказов</h1>
+      
+      <div class="controls">
+        <div class="search-box">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Поиск по ID заказа или пользователя...">
+        </div>
+        
+        <div class="filter-box">
+          <select [(ngModel)]="selectedStatus">
+            <option value="all">Все статусы</option>
+            <option value="pending">Новые</option>
+            <option value="in_progress">В работе</option>
+            <option value="ready">Готовые</option>
+          </select>
+        </div>
+        
+        <button class="refresh-btn" (click)="loadOrders()" [disabled]="isLoading">
+          {{ isLoading ? '🔄 Обновление...' : '🔄 Обновить' }}
+        </button>
+      </div>
+    </div>
+  
+    <div *ngIf="errorMessage" class="error-message">
+      ❌ {{ errorMessage }}
+    </div>
+    
+    <div *ngIf="successMessage" class="success-message">
+      ✅ {{ successMessage }}
+    </div>
+  
+    <div *ngIf="isLoading && filteredOrders.length === 0" class="loading">
+      ⏳ Загрузка заказов...
+    </div>
+  
+    <div *ngIf="!isLoading && filteredOrders.length === 0" class="empty-state">
+      📭 Нет заказов для отображения
+    </div>
+  
+    <div class="orders-grid">
+      <div *ngFor="let order of filteredOrders" class="order-card" [class]="getStatusClass(order.status)">
+        <div class="order-header">
+          <span class="order-id">#{{ order._id | slice:0:8 }}</span>
+          <span class="order-status">
+            <span *ngIf="order.status === 'pending'">🆕 Новый</span>
+            <span *ngIf="order.status === 'in_progress'">🛠️ В работе</span>
+            <span *ngIf="order.status === 'ready'">✅ Готов</span>
+          </span>
+        </div>
+        
+        <div class="order-info">
+          <div class="info-row">
+            <span class="info-label">👤 Пользователь:</span>
+            <span class="info-value">{{ order.user | slice:0:8 }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">👷 Назначен:</span>
+            <span class="info-value">{{ order.assignedTo | slice:0:8 }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">📅 Создан:</span>
+            <span class="info-value">{{ order.createdAt | date:'dd.MM.yyyy HH:mm' }}</span>
+          </div>
+        </div>
+        
+        <div class="order-items">
+          <h3>Состав заказа ({{ order.items.length }}):</h3>
+          <ul>
+            <li *ngFor="let item of order.items">
+              Продукт ID: {{ item.product | slice:0:8 }} × {{ item.quantity }} шт.
+            </li>
+          </ul>
+        </div>
+        
+        <div class="order-actions">
+          <button *ngIf="order.status === 'pending'" 
+                  (click)="acceptOrder(order._id)" 
+                  class="accept-btn">
+            Принять заказ
+          </button>
+          
+          <button *ngIf="order.status === 'in_progress'" 
+                  (click)="completeOrder(order._id)" 
+                  class="complete-btn">
+            Завершить
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>

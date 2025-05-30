@@ -1,18 +1,40 @@
-<h2>Суточный отчёт</h2>
-<div *ngFor="let daily of dailySummary">
-<p>Всего продаж: {{ daily.totalSales }}</p>
-<p>Общая сумма: {{ daily.count }}</p>
+<div class="dashboard-container">
+  <section class="daily-report">
+    <h2>Суточный отчёт</h2>
+    
+    <div *ngIf="dailySummary.length > 0; else noDailyData" class="daily-stats">
+      <div *ngFor="let daily of dailySummary" class="stat-card">
+        <p><strong>Всего продаж:</strong> {{ daily.count || 0 }}</p>
+        <p><strong>Общая сумма:</strong> {{ daily.totalSales | currency:'KZT':'symbol-narrow':'1.2-2' }}</p>
+      </div>
+    </div>
+    <ng-template #noDailyData>
+      <p class="no-data">Нет данных за выбранную дату</p>
+    </ng-template>
+  </section>
+
+  <section class="sales-history">
+    <h2>История продаж</h2>
+    <div *ngIf="salesHistory.length > 0; else noSalesData" class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Дата</th>
+            <th>Оплата</th>
+            <th>Сумма</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sale of salesHistory">
+            <td>{{ sale.date | date:'dd.MM.yyyy HH:mm' }}</td>
+            <td>{{ formatPaymentMethod(sale.paymentMethod) }}</td>
+            <td>{{ sale.total | currency:'KZT':'symbol-narrow':'1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ng-template #noSalesData>
+      <p class="no-data">Нет данных о продажах</p>
+    </ng-template>
+  </section>
 </div>
-<h2>История продаж</h2>
-<table>
-  <tr>
-    <th>Дата</th>
-    <th>Покупатель</th>
-    <th>Сумма</th>
-  </tr>
-  <tr *ngFor="let sale of salesHistory">
-    <td>{{ sale.date | date }}</td>
-    <td>{{ sale.paymentMethod }}</td>
-    <td>{{ sale.total }}</td>
-  </tr>
-</table>

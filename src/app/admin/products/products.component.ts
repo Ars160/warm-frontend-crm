@@ -16,13 +16,14 @@ export class ProductsComponent implements OnInit {
   categories: any[] = [];
   isEditing = false;
   currentProductId: string | null = null;
+  selectedFile: File | null = null;
+  previewUrl: string | ArrayBuffer | null = null;
 
   productForm = {
     name: '',
     sku: '',
     price: 0,
     quantity: 0,
-    imageUrl: '',
     categoryId: ''
   };
 
@@ -46,7 +47,6 @@ export class ProductsComponent implements OnInit {
   loadCategories(): void {
     this.categoryService.getCategories().subscribe({
       next: (res) => {
-        console.log('Loaded categories:', res); // Добавьте лог
         this.categories = res;
       },
       error: (err) => {
@@ -54,6 +54,20 @@ export class ProductsComponent implements OnInit {
         alert('Не удалось загрузить категории');
       }
     });
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedFile = file;
+      
+      // Создаем превью изображения
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.previewUrl = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
   }
 
   initEditProduct(product: any): void {
@@ -64,9 +78,9 @@ export class ProductsComponent implements OnInit {
       sku: product.sku,
       price: product.price,
       quantity: product.quantity,
-      imageUrl: product.imageUrl || '',
       categoryId: product.category?._id || product.category || ''
     };
+    this.previewUrl = product.imageUrl || null;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -74,33 +88,39 @@ export class ProductsComponent implements OnInit {
     this.isEditing = false;
     this.currentProductId = null;
     this.resetForm();
+    this.previewUrl = null;
+    this.selectedFile = null;
   }
 
   submitProduct(): void {
     if (!this.validateForm()) return;
 
-    const productData = {
-      name: this.productForm.name,
-      sku: this.productForm.sku,
-      price: this.productForm.price,
-      quantity: this.productForm.quantity,
-      imageUrl: this.productForm.imageUrl,
-      category: this.productForm.categoryId
-    };
+    const formData = new FormData();
+    formData.append('name', this.productForm.name);
+    formData.append('sku', this.productForm.sku);
+    formData.append('price', this.productForm.price.toString());
+    formData.append('quantity', this.productForm.quantity.toString());
+    formData.append('category', this.productForm.categoryId);
+    
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile);
+    }
 
     if (this.isEditing && this.currentProductId) {
-      this.updateProduct(this.currentProductId, productData);
+      this.updateProduct(this.currentProductId, formData);
     } else {
-      this.createProduct(productData);
+      this.createProduct(formData);
     }
   }
 
-  createProduct(product: any): void {
-    this.productService.createProduct(product).subscribe({
+  createProduct(formData: FormData): void {
+    this.productService.createProduct(formData).subscribe({
       next: () => {
         alert('Продукт успешно создан');
         this.resetForm();
         this.loadProducts();
+        this.previewUrl = null;
+        this.selectedFile = null;
       },
       error: (err) => {
         console.error('Ошибка создания продукта', err);
@@ -109,8 +129,8 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  updateProduct(id: string, product: any): void {
-    this.productService.updateProduct(id, product).subscribe({
+  updateProduct(id: string, formData: FormData): void {
+    this.productService.updateProduct(id, formData).subscribe({
       next: () => {
         alert('Продукт успешно обновлён');
         this.cancelEdit();
@@ -160,7 +180,6 @@ export class ProductsComponent implements OnInit {
       sku: '',
       price: 0,
       quantity: 0,
-      imageUrl: '',
       categoryId: ''
     };
   }

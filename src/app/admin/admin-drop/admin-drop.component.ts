@@ -10,11 +10,16 @@ interface DropItem {
   quantity: number;
 }
 
+interface DropItemRes {
+  sku: string,
+  quantity: number
+}
+
 interface Drop {
   _id: string;
   supplier: string;
   date: string;
-  items: DropItem[];
+  items: DropItemRes[];
   acceptedBy: string;
 }
 
@@ -37,10 +42,13 @@ export class AdminDropComponent implements OnInit {
 
   fetchDrops() {
     this.http.get<Drop[]>(`${enviroment.apiUrl}/api/orders`).subscribe({
-      next: (data) => this.drops = data,
+      next: (data) => {
+        this.drops = data
+      },
       error: (err) => console.error('Ошибка загрузки приходов:', err)
     });
   }
+  
 
   createDrop() {
     if (!this.newDrop.supplier || this.newDrop.items.length === 0) {
@@ -59,5 +67,13 @@ export class AdminDropComponent implements OnInit {
 
   addItem(productId: string, quantity: number) {
     this.newDrop.items.push({ productId, quantity });
+  }
+
+  removeItem(productId: string) {
+    this.newDrop.items = this.newDrop.items.filter(item => item.productId !== productId);
+  }
+
+  canCreateDrop(): boolean {
+    return this.newDrop.supplier?.trim().length > 0 && this.newDrop.items.length > 0;
   }
 }

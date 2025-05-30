@@ -1,11 +1,101 @@
-<h2>Список продуктов</h2>
-<div *ngFor="let product of products" style="margin-bottom: 20px; border: 1px solid #ddd; padding: 10px;">
-  <b>{{ product.name }}</b><br>
-  <span>Цена: {{ product.price }} ₸</span><br>
-  <input type="number" min="1" [(ngModel)]="product.quantity" placeholder="Количество">
-  <button (click)="addToCart(product._id, product.quantity || 1)">Добавить в корзину</button>
-</div>
-
-<hr>
-
-<button (click)="placeOrder()">Оформить заказ</button>
+<div class="products-container">
+    <div class="products-header">
+      <h1>🛍️ Список продуктов</h1>
+      
+      <div class="controls">
+        <div class="search-box">
+          <input type="text" [(ngModel)]="searchQuery" placeholder="Поиск продуктов...">
+        </div>
+        
+        <div class="filter-box" *ngIf="categories.length > 1">
+          <select [(ngModel)]="selectedCategory">
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category === 'all' ? 'Все категории' : category }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  
+    <div *ngIf="errorMessage" class="error-message">
+      ❌ {{ errorMessage }}
+    </div>
+    
+    <div *ngIf="successMessage" class="success-message">
+      ✅ {{ successMessage }}
+    </div>
+  
+    <div *ngIf="isLoading && products.length === 0" class="loading">
+      ⏳ Загрузка продуктов...
+    </div>
+  
+    <div *ngIf="!isLoading && filteredProducts.length === 0" class="empty-state">
+      📭 Нет продуктов для отображения
+    </div>
+  
+    <div class="products-grid">
+      <div *ngFor="let product of filteredProducts" class="product-card">
+        <div class="product-image" *ngIf="product.imageUrl">
+          <img [src]="product.imageUrl" [alt]="product.name" onerror="this.src='assets/no-image.png'">
+        </div>
+        
+        <div class="product-details">
+          <h3>{{ product.name }}</h3>
+          
+          <div *ngIf="product.category" class="product-category">
+            Категория: {{ product.category }}
+          </div>
+          
+          <div class="product-price">
+            {{ product.price | currency:'KZT':'symbol-narrow':'1.2-2' }}
+          </div>
+          
+          <div *ngIf="product.description" class="product-description">
+            {{ product.description }}
+          </div>
+          
+          <div class="product-actions">
+            <input type="number" min="1" [(ngModel)]="product.quantity" placeholder="Кол-во">
+            <button (click)="addToCart(product, product.quantity || 1)">
+              🛒 Добавить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cart-section" *ngIf="cart.length > 0">
+      <h2>🛒 Ваша корзина</h2>
+      
+      <div class="cart-items">
+        <div *ngFor="let item of cart; let i = index" class="cart-item">
+          <div class="item-image" *ngIf="item.imageUrl">
+            <img [src]="item.imageUrl" [alt]="item.productName">
+          </div>
+          
+          <div class="item-details">
+            <h3>{{ item.productName }}</h3>
+            <div class="item-controls">
+              <input type="number" min="1" [(ngModel)]="item.quantity" 
+                     (change)="updateQuantity(item, item.quantity)">
+              <button (click)="removeFromCart(i)">🗑️</button>
+            </div>
+            <div class="item-price">
+              {{ item.price | currency:'KZT':'symbol-narrow':'1.2-2' }} × {{ item.quantity }} = 
+              {{ item.price * item.quantity | currency:'KZT':'symbol-narrow':'1.2-2' }}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="cart-summary">
+        <div class="total-amount">
+          Итого: {{ totalAmount | currency:'KZT':'symbol-narrow':'1.2-2' }}
+        </div>
+        
+        <button class="checkout-btn" (click)="placeOrder()" [disabled]="isLoading">
+          {{ isLoading ? '⏳ Оформление...' : '✅ Оформить заказ' }}
+        </button>
+      </div>
+    </div>
+  </div>

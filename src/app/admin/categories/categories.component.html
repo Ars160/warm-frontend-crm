@@ -1,16 +1,70 @@
-<h2>Категории</h2>
-
-<ul>
-  <li *ngFor="let category of categories">
-    {{ category.name }}
-    <button (click)="deleteCategory(category._id)">Удалить</button>
-  </li>
-</ul>
-
-<h3>Создать новую категорию</h3>
-<div>
-    <input type="text" [(ngModel)]="newCategoryName" placeholder="Название категории" />
-    <input type="text" [(ngModel)]="newCategoryDescription" placeholder="Описание" />
-  
-    <button (click)="createCategory()">Создать категорию</button>
+<div class="categories-container">
+  <!-- Заголовок и статистика -->
+  <div class="categories-header">
+    <h2 class="categories-title">Управление категориями</h2>
+    <div class="categories-stats">
+      <span class="badge">{{ categories.length }} категорий</span>
+    </div>
   </div>
+
+  <!-- Список категорий -->
+  <div class="categories-list">
+    <div *ngIf="categories.length === 0" class="empty-state">
+      <svg xmlns="http://www.w3.org/2000/svg" class="empty-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <p>Категории не найдены</p>
+    </div>
+
+    <div *ngFor="let category of categories" class="category-card">
+      <div class="category-info">
+        <h3 class="category-name">{{ category.name }}</h3>
+        <p class="category-description" *ngIf="category.description">{{ category.description }}</p>
+        <p class="category-description empty" *ngIf="!category.description">Нет описания</p>
+      </div>
+      <div class="category-actions">
+        <button class="btn-edit">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        </button>
+        <button class="btn-delete" (click)="deleteCategory(category._id)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Форма создания -->
+  <div class="create-category">
+    <h3 class="create-title">Создать новую категорию</h3>
+    <div class="form-group">
+      <label for="categoryName">Название категории</label>
+      <input 
+        type="text" 
+        id="categoryName" 
+        [(ngModel)]="newCategoryName" 
+        placeholder="Например: Электроника" 
+        class="form-input"
+      >
+    </div>
+    <div class="form-group">
+      <label for="categoryDesc">Описание (необязательно)</label>
+      <textarea 
+        id="categoryDesc" 
+        [(ngModel)]="newCategoryDescription" 
+        placeholder="Краткое описание категории" 
+        class="form-input"
+        rows="3"
+      ></textarea>
+    </div>
+    <button class="btn-create" (click)="createCategory()" [disabled]="!newCategoryName">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Создать категорию
+    </button>
+  </div>
+</div>

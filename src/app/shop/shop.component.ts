@@ -376,9 +376,6 @@ export class ShopComponent {
 
   // Получаем меню в зависимости от роли
   getMenuItems() {
-    const commonItems = [
-      { label: 'Профиль', link: '/profile', icon: '👤' },
-    ];
 
     const roleMenus = {
       admin: [
@@ -405,7 +402,7 @@ export class ShopComponent {
       ]
     };
 
-    return [...(roleMenus[this.userRole as keyof typeof roleMenus] || []), ...commonItems];
+    return [...(roleMenus[this.userRole as keyof typeof roleMenus] || [])];
   }
 
   // Проверка активного маршрута

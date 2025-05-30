@@ -1,17 +1,77 @@
-<h2>Список товаров</h2>
-<div *ngFor="let product of products" style="margin-bottom: 10px;">
-  <b>{{ product.name }}</b> – {{ product.price }} ₸
-  <input type="number" min="1" placeholder="Кол-во" #qtyInput>
-  <button (click)="addToCart(product, qtyInput)">Добавить</button>
-</div>
-
-<hr>
-
-<h3>Корзина:</h3>
-<ul>
-  <li *ngFor="let item of cart">
-    {{ item.name }} – {{ item.quantity }} шт
-  </li>
-</ul>
-
-<button (click)="makeSale()" [disabled]="cart.length === 0">Оформить продажу</button>
+<div class="cash-register-container">
+    <div class="products-section">
+      <h2>Список товаров</h2>
+      
+      <div class="search-box">
+        <input type="text" [(ngModel)]="searchQuery" placeholder="Поиск товаров...">
+      </div>
+      
+      <div *ngIf="isLoading && products.length === 0" class="loading">Загрузка товаров...</div>
+      
+      <div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <div *ngIf="successMessage" class="success-message">{{ successMessage }}</div>
+      
+      <div class="product-list">
+        <div *ngFor="let product of filteredProducts" class="product-card">
+          <div class="product-image" *ngIf="product.imageUrl">
+            <img [src]="product.imageUrl" [alt]="product.name" onerror="this.src='assets/no-image.png'">
+          </div>
+          <div class="product-details">
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price | currency:'KZT':'symbol-narrow':'1.2-2' }}</p>
+            <p *ngIf="product.description" class="description">{{ product.description }}</p>
+            <div class="product-actions">
+              <input type="number" min="1" [(ngModel)]="product.quantity" placeholder="Кол-во">
+              <button (click)="addToCart(product, product.quantity || 1)">
+                <i class="fas fa-cart-plus"></i> Добавить
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="cart-section">
+      <h2>Корзина</h2>
+      
+      <div *ngIf="cart.length === 0" class="empty-cart">
+        Корзина пуста
+      </div>
+      
+      <div *ngIf="cart.length > 0">
+        <div class="cart-items">
+            <div *ngFor="let item of cart; let i = index" class="cart-item">
+              <div class="item-image" *ngIf="item.imageUrl">
+                <img [src]="item.imageUrl" [alt]="item.name">
+              </div>
+              <div class="item-info">
+                <h3>{{ item.name }}</h3>
+                <div class="item-controls">
+                  <input type="number" min="1" [(ngModel)]="item.quantity" 
+                         (change)="updateQuantity(item, item.quantity)">
+                  <button (click)="removeFromCart(i)">×</button>
+                </div>
+                <p class="item-price">{{ item.price | currency:'KZT':'symbol-narrow':'1.2-2' }} × {{ item.quantity }}</p>
+                <p class="item-total">{{ item.price * item.quantity | currency:'KZT':'symbol-narrow':'1.2-2' }}</p>
+              </div>
+            </div>
+          </div>
+        
+        <div class="cart-summary">
+          <h3>Итого: {{ totalAmount | currency:'KZT':'symbol-narrow':'1.2-2' }}</h3>
+          
+          <div class="payment-method">
+            <label>Способ оплаты:</label>
+            <select [(ngModel)]="paymentMethod">
+              <option value="cash">Наличные</option>
+              <option value="card">Карта</option>
+            </select>
+          </div>
+          
+          <button class="checkout-btn" (click)="makeSale()" [disabled]="isLoading">
+            {{ isLoading ? 'Оформление...' : 'Оформить продажу' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
