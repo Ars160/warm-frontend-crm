@@ -1,0 +1,43 @@
+<div class="register-container">
+  <div class="register-card">
+    <h1 class="register-title">Создать аккаунт</h1>
+    <p class="register-subtitle">Заполните форму для регистрации</p>
+    
+    <form (ngSubmit)="register()" class="register-form">
+      <div class="form-group">
+        <label for="username">Имя пользователя</label>
+        <input 
+          type="text" 
+          id="username" 
+          [(ngModel)]="username" 
+          placeholder="Придумайте имя пользователя" 
+          name="username" 
+          required
+          class="form-input"
+        >
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Пароль</label>
+        <input 
+          type="password" 
+          id="password" 
+          [(ngModel)]="password" 
+          placeholder="Создайте пароль" 
+          name="password" 
+          required
+          class="form-input"
+        >
+        <p class="password-hint">Используйте не менее 8 символов</p>
+      </div>
+      
+      <button type="submit" class="register-button">Зарегистрироваться</button>
+      
+      <div class="register-footer">
+        <p class="login-text">
+          Уже есть аккаунт? <a [routerLink]="['/login']" class="login-link">Войти</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

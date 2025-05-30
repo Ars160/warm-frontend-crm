@@ -1,0 +1,16 @@
+<h2>Категории</h2>
+
+<ul>
+  <li *ngFor="let category of categories">
+    {{ category.name }}
+    <button (click)="deleteCategory(category._id)">Удалить</button>
+  </li>
+</ul>
+
+<h3>Создать новую категорию</h3>
+<div>
+    <input type="text" [(ngModel)]="newCategoryName" placeholder="Название категории" />
+    <input type="text" [(ngModel)]="newCategoryDescription" placeholder="Описание" />
+  
+    <button (click)="createCategory()">Создать категорию</button>
+  </div>
